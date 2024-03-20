@@ -1,0 +1,16 @@
+{
+  "clientsPage": {
+    "title": "Клиенты",
+    "numberClinetsBlock": "Всего",
+    "textButtonAddClient": "Добавить клиента",
+    "textButtonResetSearch": "Сбросить",
+    "th_table": {
+      "fullname": "ФИО",
+      "role": "Роль",
+      "nickname": "Никнейм",
+      "phone": "Телефон",
+      "email": "Почта",
+      "balance": "Баланс"
+    }
+  }
+}
