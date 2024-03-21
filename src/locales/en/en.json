@@ -1,0 +1,16 @@
+{
+  "clientsPage": {
+    "title": "Clients",
+    "numberClinetsBlock": "All",
+    "textButtonAddClient": "Add client",
+    "textButtonResetSearch": "Reset",
+    "th_table": {
+      "fullname": "Full name",
+      "role": "Role",
+      "nickname": "Nickname",
+      "phone": "Phone",
+      "email": "Email",
+      "balance": "Balance"
+    }
+  }
+}
