@@ -1,4 +1,7 @@
 {
+  "authPage": {
+    "textButtonLogin": "Войти с помощью Google" 
+  },
   "clientsPage": {
     "title": "Клиенты",
     "numberClinetsBlock": "Всего",
