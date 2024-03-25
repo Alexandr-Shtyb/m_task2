@@ -1,21 +1,31 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { auth, googleProvider } from "../../../firebase/firebase";
-import { signInWithPopup } from "firebase/auth";
+import { authClient } from "../../../firebase/firebaseAuth";
 import { setFirestoreDatabaseById } from "../../../firebase/firebaseDatabase";
 import { IClient } from "../../../types/client";
 
 interface IClientState {
   clients: IClient[];
+  loading: boolean;
+  error: boolean;
 }
 
 const initialState: IClientState = {
   clients: [],
+  loading: false,
+  error: false,
 };
 
-export const login = createAsyncThunk("client/auth", async () => {
+export const login = createAsyncThunk<
+  {
+    uid: string | null;
+    displayName: string | null;
+    email: string | null;
+  },
+  void,
+  { rejectValue: string }
+>("client/auth", async (_, { rejectWithValue }) => {
   try {
-    const { user } = await signInWithPopup(auth, googleProvider);
-    const { uid, displayName, email } = user;
+    const { uid, displayName, email } = await authClient();
 
     const client = {
       uid: uid as string,
@@ -24,11 +34,11 @@ export const login = createAsyncThunk("client/auth", async () => {
       role: "user",
     };
 
-    setFirestoreDatabaseById(client);
+    setFirestoreDatabaseById("clients", client);
 
     return { uid, displayName, email };
   } catch (e) {
-    console.error(e);
+    return rejectWithValue(String(e));
   }
 });
 
@@ -38,7 +48,6 @@ export const clientSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder.addCase(login.fulfilled, (state, action) => {
-      console.log(action);
       const payload = action.payload;
       const client = {
         uid: payload?.uid as string,
@@ -47,7 +56,15 @@ export const clientSlice = createSlice({
         role: "user",
       };
 
+      state.loading = false;
       state.clients.push(client);
+    });
+    builder.addCase(login.pending, state => {
+      state.loading = true;
+    });
+    builder.addCase(login.rejected, state => {
+      state.error = true;
+      state.loading = false;
     });
   },
 });
